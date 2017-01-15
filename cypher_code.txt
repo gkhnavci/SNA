@@ -1,0 +1,47 @@
+MATCH 
+(e:Employee)-[:TAKDIR_ALDI]->(t:Takdir)<-[:TAKDIR_ETTI]-(e2:Employee)
+return e.name,e2.name limit 10;
+
+MATCH 
+(e:Employee) - [:TAKDIR_ALDI] -> (Takdir) 
+return e.name,count(Takdir) as degree 
+order by degree desc;
+
+MATCH 
+(e:Employee) - [:TAKDIR_ALDI] -> (Takdir) 
+return e.name,count(Takdir) as degree 
+order by degree desc;
+
+MATCH 
+(e:Employee)-[:TAKDIR_ALDI]->(Takdir)<-[:TAKDIR_ETTI]-(e2:Employee) 
+create (e2)-[r:ROLE_T]->(e) RETURN r;
+
+MATCH (e:Employee)-[:ROLE_T]->(e2:Employee)return * limit 100;
+
+MATCH p=allShortestPaths((e:Employee)-[:ROLE_T*0..3]->(e2:Employee)) 
+return p;
+
+MATCH (e:Employee)-[:ROLE_T]->(e2:Employee) 
+where (e2)-[:ROLE_T]->(e)
+return *;
+
+MATCH (e:Employee)-[t:ROLE_T]->(e2:Employee) 
+return e.name,count(t) as degreeScore 
+order by degreeScore desc limit 100;
+
+MATCH p=allShortestPaths((e:Employee)-[:ROLE_T*0..3]->(e2:Employee)) WHERE id(e)<id(e2)and length(p)>1 
+unwind nodes(p)[1..-1]as n 
+return n.name,count(*) as betweenness 
+order by betweenness desc;
+
+match path1=(e:Employee)-[ROLE_T*2..2]-(e2:Employee)
+where not ((e)-[:ROLE_T]-(e2)) return e.name,e2.name limit 50;
+
+MATCH (e:Employee) set e+= {rank: 0};
+
+UNWIND range(1,2) AS ROUND MATCH (e:Employee); 
+where rand()<0.1 
+MATCH (e:Employee)-[:ROLE_T*..10]->(e2:Employee) 
+set e2.rank=coalesce(e2.rank,0)+1;
+
+match(e:Employee) return e.name,e.rank order by e.rank desc;
