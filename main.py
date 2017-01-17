@@ -21,7 +21,7 @@ for index,record in enumerate(remote_graph.data("MATCH (e:Employee) - [:TAKDIR_A
 print("######")
 print("Listing top 10 people who tend to appreciate most")
 print("######")
-for index,record in enumerate(remote_graph.data("MATCH (e:Employee) - [:TAKDIR_ALDI] -> (Takdir) return e.name,count(Takdir) as degree order by degree desc limit 10 ")):
+for index,record in enumerate(remote_graph.data("MATCH (e:Employee) - [:TAKDIR_ETTI] -> (Takdir) return e.name,count(Takdir) as degree order by degree desc limit 10 ")):
     print(str(index + 1) + ' ' + record['e.name'] +' ' + str(record['degree']) + ' times appreciated')
 
 #print("Create new type of edge named ROLE_T")
